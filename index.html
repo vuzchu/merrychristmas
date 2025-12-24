@@ -535,4 +535,121 @@
         <source src="https://www.bensound.com/bensound-music/bensound-christmas.mp3" type="audio/mpeg">
     </audio>
 
-    <!--
+    <!-- Music Control Button -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Bật/Tắt nhạc Giáng sinh">
+        🎵
+    </button>
+
+    <script>
+        // Music control
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let musicPlaying = false;
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                musicBtn.textContent = '🎵';
+                musicBtn.classList.remove('playing');
+            } else {
+                bgMusic.play().catch(e => {
+                    console.log('Music play failed:', e);
+                    alert('Vui lòng bấm lại để phát nhạc Giáng sinh! 🎄');
+                });
+                musicPlaying = true;
+                musicBtn.textContent = '🎶';
+                musicBtn.classList.add('playing');
+            }
+        }
+
+        // Try to play music when user interacts
+        function startMusic() {
+            if (!musicPlaying) {
+                bgMusic.play().catch(e => {
+                    console.log('Music play failed:', e);
+                });
+                musicPlaying = true;
+                musicBtn.textContent = '🎶';
+                musicBtn.classList.add('playing');
+            }
+        }
+
+        // Create snowflakes
+        function createSnowflakes(containerId) {
+            const container = document.getElementById(containerId);
+            const snowflakeCount = 50;
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = '❄';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+                snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                container.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes('snowContainer');
+        createSnowflakes('snowContainer2');
+
+        // Letter content with word-by-word animation
+        const letterLines = [
+            { text: "🎁Gửi Hải Hà Thân yêu,", highlight: false },
+            { text: "Chúc Hải Hà của anh mùa Giáng sinh an lành, hạnh phúc và luôn tràn ngập niềm vui.", highlight: false },
+            { text: "Hy vọng mùa lễ này mang đến cho em thật nhiều điều ấm áp và thêm những khoảnh khắc đáng nhớ bên anh.", highlight: false },
+            { text: "Merry Christmas! 🎄✨", highlight: false }
+        ];
+
+        function createLetterContent() {
+            const container = document.getElementById('letterContent');
+            
+            letterLines.forEach((line, lineIndex) => {
+                const lineElement = document.createElement('span');
+                lineElement.className = 'letter-line';
+                if (line.highlight) {
+                    lineElement.classList.add('highlight-text');
+                }
+                
+                const words = line.text.split(' ');
+                words.forEach((word, wordIndex) => {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.className = 'letter-word';
+                    wordSpan.textContent = word;
+                    wordSpan.style.animationDelay = `${lineIndex * 0.3 + wordIndex * 0.1 + 0.5}s`;
+                    lineElement.appendChild(wordSpan);
+                    
+                    if (wordIndex < words.length - 1) {
+                        lineElement.appendChild(document.createTextNode(' '));
+                    }
+                });
+                
+                container.appendChild(lineElement);
+            });
+        }
+
+        function goToGiftScene() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('giftScene').classList.remove('hidden');
+            startMusic();
+        }
+
+        function openGift() {
+            document.getElementById('giftScene').classList.add('hidden');
+            document.getElementById('messageScene').classList.remove('hidden');
+            createLetterContent();
+            startMusic();
+        }
+
+        function backToGiftScene() {
+            document.getElementById('messageScene').classList.add('hidden');
+            document.getElementById('giftScene').classList.remove('hidden');
+            // Clear letter content for re-animation
+            document.getElementById('letterContent').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
